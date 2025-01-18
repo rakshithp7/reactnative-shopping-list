@@ -42,7 +42,7 @@ export default function NewListScreen() {
         <IconCircle emoji={randomEmoji} size={60} backgroundColor={randomColor} style={{ marginBottom: 8 }} />
         <ThemedText type="title">Better Together</ThemedText>
         <ThemedText type="defaultSemiBold" style={{ color: 'gray', textAlign: 'center' }}>
-          Create shared shopping lists and collaborate in real-time with{' '}
+          Create shared shopping lists and collaborate in real-time with family and friends
         </ThemedText>
       </View>
 
