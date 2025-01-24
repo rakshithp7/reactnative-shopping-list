@@ -23,6 +23,7 @@ export default function NewListScreen() {
 
   const joinShoppingListCallback = (listId: string) => {};
   const handleJoinList = () => {};
+
   const handleDismissTo = (screen: Href) => {
     if (router.canDismiss()) {
       router.dismiss();
