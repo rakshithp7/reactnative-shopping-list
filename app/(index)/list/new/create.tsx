@@ -1,19 +1,33 @@
 import { View, Text, StyleSheet } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import BodyScrollView from '@/components/ui/BodyScrollView';
-import { Link, Stack } from 'expo-router';
+import { Link, Stack, useRouter } from 'expo-router';
 import { appleBlue, backgroundColors, emojies } from '@/constants/Colors';
 import TextInput from '@/components/ui/TextInput';
 import { ThemedText } from '@/components/ThemedText';
 import Button from '@/components/ui/Button';
 import { useListCreation } from '@/context/ListCreationContext';
+import { useAddShoppingListCallback } from '@/stores/ShoppingListsStore';
 
 export default function CreateScreen() {
+  const router = useRouter();
   const [listName, setListName] = useState('');
   const [listDescription, setListDescription] = useState('');
   const { selectedEmoji, setSelectedEmoji, selectedColor, setSelectedColor } = useListCreation();
 
-  const handleCreateList = () => {};
+  const useAddShoppingList = useAddShoppingListCallback();
+
+  const handleCreateList = () => {
+    if (!listName) return;
+
+    const listId = useAddShoppingList(listName, listDescription, selectedEmoji, selectedColor);
+
+    // navigate to list details and pass listId
+    router.replace({
+      pathname: '/list/[listId]',
+      params: { listId },
+    });
+  };
 
   useEffect(() => {
     setSelectedEmoji(emojies[Math.floor(Math.random() * emojies.length)]);
