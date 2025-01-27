@@ -103,6 +103,15 @@ export default function AppIndexLayout() {
               }}
             />
             <Stack.Screen
+              name="list/[listId]/share"
+              options={{
+                presentation: 'formSheet',
+                sheetGrabberVisible: true,
+                headerLargeTitle: false,
+                headerTitle: 'Invite',
+              }}
+            />
+            <Stack.Screen
               name="profile"
               options={{
                 presentation: 'formSheet',

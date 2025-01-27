@@ -32,10 +32,10 @@ export default function ListScreen() {
               }}>
               <Pressable
                 onPressIn={() => {
-                  // router.push({
-                  //   pathname: '/list/[listId]/share',
-                  //   params: { listId },
-                  // });
+                  router.push({
+                    pathname: '/list/[listId]/share',
+                    params: { listId },
+                  });
                 }}
                 style={{ padding: 8 }}>
                 <IconSymbol name="square.and.arrow.up" color={'#007AFF'} />
