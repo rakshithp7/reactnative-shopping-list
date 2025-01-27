@@ -78,14 +78,11 @@ export default function index() {
     <>
       <Stack.Screen
         options={{
+          title: 'Shopping lists',
           headerRight: renderHeaderRight,
           headerLeft: renderHeaderLeft,
         }}
       />
-      {/* <ThemedText type="title">Home Screen</ThemedText> */}
-      {/* <Button style={{ marginTop: 200 }} disabled={isLoading} loading={isLoading} onPress={handleSignOut}>
-        Sign Out
-      </Button> */}
       <FlatList
         data={shoppingListIds}
         renderItem={({ item: listId }) => <ShoppingListItem listId={listId} />}
