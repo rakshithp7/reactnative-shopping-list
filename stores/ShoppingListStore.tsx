@@ -1,5 +1,5 @@
 import * as UIReact from 'tinybase/ui-react/with-schemas';
-import { createMergeableStore } from 'tinybase/with-schemas';
+import { createMergeableStore, Value } from 'tinybase/with-schemas';
 import { useCreateClientPersisterAndStart } from './persistence/useCreateClientPersisterAndStart';
 import { useCreateServerSynchronizerAndStart } from './synchronization/useCreateServerSynchronizerAndStart';
 import { useUserIdAndNickname } from '@/hooks/useNickname';
@@ -55,6 +55,23 @@ const {
 } = UIReact as UIReact.WithSchemas<Schemas>;
 
 const useStoreId = (listId: string) => STORE_ID_PREFIX + listId;
+
+// Returns the number of products in the shopping list.
+export const useShoppingListProductCount = (listId: string) => useRowCount('products', useStoreId(listId));
+
+// Returns a pair of 1) a property of the shopping list, 2) a callback that
+// updates it, similar to the React useState pattern.
+export const useShoppingListValue = <ValueId extends ShoppingListValueId>(
+  listId: string,
+  valueId: ValueId
+): [Value<Schemas[1], ValueId>, (value: Value<Schemas[1], ValueId>) => void] => [
+  useValue(valueId, useStoreId(listId)),
+  useSetValueCallback(valueId, (value: Value<Schemas[1], ValueId>) => value, [], useStoreId(listId)),
+];
+
+// Returns the nicknames of people involved in this shopping list.
+export const useShoppingListUserNicknames = (listId: string) =>
+  Object.entries(useTable('collaborators', useStoreId(listId))).map(([, { nickname }]) => nickname);
 
 // Create, persist, and sync a store containing the shopping list and products.
 export default function ShoppingListStore({

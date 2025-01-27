@@ -2,6 +2,6 @@ import { createLocalPersister } from 'tinybase/persisters/persister-browser/with
 import { MergeableStore, OptionalSchemas } from 'tinybase/with-schemas';
 
 export const createClientPersister = <Schemas extends OptionalSchemas>(
-  store: MergeableStore<Schemas>,
-  storeId: string
+  storeId: string,
+  store: MergeableStore<Schemas>
 ) => createLocalPersister(store, storeId);

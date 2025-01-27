@@ -48,6 +48,11 @@ export const useAddShoppingListCallback = () => {
   );
 };
 
+// Returns a callback that deletes a shopping list from the store.
+export const useDelShoppingListCallback = (id: string) => useDelRowCallback('lists', id, useStoreId());
+
+export const useShoppingListIds = () => useRowIds('lists', useStoreId());
+
 // Create, persist, and sync a store containing the IDs of the shopping lists.
 export default function ShoppingListsStore() {
   const storeId = useStoreId();

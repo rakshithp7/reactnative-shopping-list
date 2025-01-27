@@ -3,14 +3,19 @@ import { ThemedText } from '@/components/ThemedText';
 import BodyScrollView from '@/components/ui/BodyScrollView';
 import Button from '@/components/ui/Button';
 import { useClerk } from '@clerk/clerk-expo';
-import { Stack, useRouter } from 'expo-router';
-import { Pressable } from 'react-native';
+import { Link, Stack, useRouter } from 'expo-router';
+import { FlatList, Platform, Pressable, StyleSheet } from 'react-native';
+import * as Haptics from 'expo-haptics';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { appleBlue } from '@/constants/Colors';
+import { appleBlue, backgroundColors } from '@/constants/Colors';
+import { useShoppingListIds } from '@/stores/ShoppingListsStore';
+import IconCircle from '@/components/IconCircle';
+import ShoppingListItem from '@/components/ShoppingListItem';
 
 export default function index() {
   const { signOut } = useClerk();
   const router = useRouter();
+  const shoppingListIds = useShoppingListIds();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignOut = async () => {
@@ -27,6 +32,25 @@ export default function index() {
       setIsLoading(false);
     }
   };
+
+  const handleNewListPress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/list/new');
+  };
+
+  const handleProfilePress = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push('/profile');
+  };
+
+  const renderEmptyList = () => (
+    <BodyScrollView contentContainerStyle={styles.emptyStateContainer}>
+      <IconCircle emoji="🛒" backgroundColor={backgroundColors[Math.floor(Math.random() * backgroundColors.length)]} />
+      <Button onPress={handleNewListPress} variant="ghost">
+        Create your first list
+      </Button>
+    </BodyScrollView>
+  );
 
   const renderHeaderRight = () => {
     return (
@@ -58,15 +82,36 @@ export default function index() {
           headerLeft: renderHeaderLeft,
         }}
       />
-      <BodyScrollView
-        contentContainerStyle={{
-          padding: 16,
-        }}>
-        <ThemedText type="title">Home Screen</ThemedText>
-        <Button disabled={isLoading} loading={isLoading} onPress={handleSignOut}>
-          Sign Out
-        </Button>
-      </BodyScrollView>
+      {/* <ThemedText type="title">Home Screen</ThemedText> */}
+      {/* <Button style={{ marginTop: 200 }} disabled={isLoading} loading={isLoading} onPress={handleSignOut}>
+        Sign Out
+      </Button> */}
+      <FlatList
+        data={shoppingListIds}
+        renderItem={({ item: listId }) => <ShoppingListItem listId={listId} />}
+        contentContainerStyle={styles.listContainer}
+        contentInsetAdjustmentBehavior="automatic"
+        ListEmptyComponent={renderEmptyList}
+      />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  listContainer: {
+    paddingTop: 8,
+  },
+  emptyStateContainer: {
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 100,
+  },
+  headerButton: {
+    padding: 8,
+    paddingRight: 0,
+    marginHorizontal: Platform.select({ web: 16, default: 0 }),
+  },
+  headerButtonLeft: {
+    paddingLeft: 0,
+  },
+});

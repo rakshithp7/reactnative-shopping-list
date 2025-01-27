@@ -3,6 +3,6 @@ import { createExpoSqlitePersister } from 'tinybase/persisters/persister-expo-sq
 import { MergeableStore, OptionalSchemas } from 'tinybase/with-schemas';
 
 export const createClientPersister = <Schemas extends OptionalSchemas>(
-  store: MergeableStore<Schemas>,
-  storeId: string
+  storeId: string,
+  store: MergeableStore<Schemas>
 ) => createExpoSqlitePersister(store, SQLite.openDatabaseSync(storeId + '.db'));
