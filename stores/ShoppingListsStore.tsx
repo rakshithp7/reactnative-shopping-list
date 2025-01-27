@@ -1,11 +1,11 @@
-import { useUser } from '@clerk/clerk-expo';
+import React, { useCallback } from 'react';
+import { randomUUID } from 'expo-crypto';
 import * as UiReact from 'tinybase/ui-react/with-schemas';
 import { createMergeableStore, NoValuesSchema } from 'tinybase/with-schemas';
-import { useCreateClientPersisterAndStart } from './persistence/useCreateClientPersisterAndStart';
-import { useCreateServerSynchronizerAndStart } from './synchronization/useCreateServerSynchronizerAndStart';
+import { useCreateClientPersisterAndStart } from '@/stores/persistence/useCreateClientPersisterAndStart';
+import { useUser } from '@clerk/clerk-expo';
 import ShoppingListStore from './ShoppingListStore';
-import { useCallback } from 'react';
-import { randomUUID } from 'expo-crypto';
+import { useCreateServerSynchronizerAndStart } from './synchronization/useCreateServerSynchronizerAndStart';
 
 const STORE_ID_PREFIX = 'shoppingListsStore-';
 
@@ -48,9 +48,24 @@ export const useAddShoppingListCallback = () => {
   );
 };
 
+// Returns a callback that adds an existing shopping list to the store.
+export const useJoinShoppingListCallback = () => {
+  const store = useStore(useStoreId());
+  return useCallback(
+    (listId: string) => {
+      store.setRow('lists', listId, {
+        id: listId,
+        initialContentJson: JSON.stringify([{}, {}]),
+      });
+    },
+    [store]
+  );
+};
+
 // Returns a callback that deletes a shopping list from the store.
 export const useDelShoppingListCallback = (id: string) => useDelRowCallback('lists', id, useStoreId());
 
+// Returns the IDs of all shopping lists in the store.
 export const useShoppingListIds = () => useRowIds('lists', useStoreId());
 
 // Create, persist, and sync a store containing the IDs of the shopping lists.
